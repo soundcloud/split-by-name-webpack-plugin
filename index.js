@@ -3,8 +3,7 @@ var SplitByNamePlugin = module.exports = function (options) {
 };
 
 SplitByNamePlugin.prototype.apply = function(compiler) {
-  var extraChunks = {},
-      options = this.options;
+  var options = this.options;
 
   function findMatchingBucket(chunk) {
     var match = null;
@@ -17,13 +16,15 @@ SplitByNamePlugin.prototype.apply = function(compiler) {
     return match;
   }
 
-  // Find the chunk which was already created by this bucket.
-  // This is also the grossest function name I've written today.
-  function bucketToChunk(bucket) {
-    return extraChunks[bucket.name];
-  }
-
   compiler.plugin("compilation", function(compilation) {
+    var extraChunks = {};
+
+    // Find the chunk which was already created by this bucket.
+    // This is also the grossest function name I've written today.
+    function bucketToChunk(bucket) {
+      return extraChunks[bucket.name];
+    }
+
     compilation.plugin("optimize-chunks", function(chunks) {
       var addChunk = this.addChunk.bind(this);
       chunks
