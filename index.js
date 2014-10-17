@@ -1,5 +1,13 @@
 var SplitByNamePlugin = module.exports = function (options) {
   this.options = options;
+
+  // process buckets
+  this.options.buckets = this.options.buckets.slice(0).map(function (bucket) {
+    if (!(bucket.regex instanceof RegExp)) {
+      bucket.regex = new RegExp(bucket.regex);
+    }
+    return bucket;
+  });
 };
 
 SplitByNamePlugin.prototype.apply = function(compiler) {
